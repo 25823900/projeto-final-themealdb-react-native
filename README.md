@@ -9,6 +9,7 @@ Aplicativo mobile do projeto final da disciplina Arquitetura de Aplicações Mó
 - João Vítor Vieira Martins
 - Júlio César Fernandes
 - Jhonathan Carvo
+- William Tavares de Moura
 
 ## Funcionalidades exigidas
 
