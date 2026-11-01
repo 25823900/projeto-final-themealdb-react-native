@@ -1,0 +1,15 @@
+# Feature 2 — navegação lista → detalhe
+appId: com.puciec.themealfinal
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: "item-list-screen"
+    timeout: 20000
+- tapOn:
+    id: "item-card-53060"
+- assertVisible:
+    id: "detail-screen"
+- assertVisible:
+    id: "detail-title"
+- assertVisible: "Burek"

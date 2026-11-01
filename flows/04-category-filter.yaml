@@ -1,0 +1,14 @@
+# Feature 4 — categoria/filtro estruturado (categoria "Dessert")
+appId: com.puciec.themealfinal
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: "item-list-screen"
+    timeout: 20000
+- tapOn:
+    id: "category-chip-dessert"
+- assertVisible:
+    id: "item-card-53322"
+- assertNotVisible:
+    id: "item-card-53060"

@@ -1,0 +1,13 @@
+# Feature 3 — busca por texto
+appId: com.puciec.themealfinal
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: "item-list-screen"
+    timeout: 20000
+- tapOn:
+    id: "search-input"
+- inputText: "sushi"
+- assertVisible:
+    id: "item-card-53065"

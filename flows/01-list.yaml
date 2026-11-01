@@ -1,0 +1,10 @@
+# Feature 1 — lista consumindo API real (TheMealDB)
+appId: com.puciec.themealfinal
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: "item-list-screen"
+    timeout: 20000
+- assertVisible:
+    id: "item-card-53060"

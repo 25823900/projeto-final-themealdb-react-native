@@ -1,0 +1,20 @@
+# Feature 5 — favoritos persistidos localmente
+appId: com.puciec.themealfinal
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: "item-list-screen"
+    timeout: 20000
+- tapOn:
+    id: "item-card-53060"
+- assertVisible:
+    id: "detail-screen"
+- tapOn:
+    id: "detail-favorite-button"
+- tapOn:
+    id: "detail-back-button"
+- tapOn:
+    id: "tab-favorites"
+- assertVisible:
+    id: "favorite-item-53060"
