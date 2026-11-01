@@ -27,22 +27,63 @@ Aplicativo mobile do projeto final da disciplina Arquitetura de Aplicações Mó
 - Android Studio e um emulador Android, ou um dispositivo Android para executar o app.
 - Expo Go pode não suportar todas as dependências nativas; para AsyncStorage e navegação nativa, prefira o development build.
 
-## Como instalar e executar
+## Como instalar e executar no Android
 
-Na raiz deste repositório:
+### Requisitos
 
-```bash
-npm install
-npm start
-```
+- Node.js 22 ou superior e npm.
+- Android Studio com Android SDK, Android Emulator e uma imagem de sistema instalados.
+- Java JDK 21.
+- Conexão com a internet para instalar dependências e carregar receitas da TheMealDB.
 
-Para compilar e executar no Android:
+### Primeira execução
 
-```bash
+1. Abra o Android Studio. Na tela inicial, acesse **More Actions > Virtual Device Manager** (em algumas versões, **Device Manager**).
+2. Se ainda não houver um dispositivo virtual, crie um em **Create Virtual Device**, escolha um modelo de celular e instale uma imagem de sistema Android. Depois, use o botão **▶** para iniciar o emulador.
+3. Aguarde o emulador chegar à tela inicial do Android.
+4. Abra a pasta do projeto no VS Code e abra um terminal na raiz do repositório.
+5. Instale as dependências e compile/abra o app:
+
+```powershell
+npm ci
 npm run android
 ```
 
-O comando requer Android Studio, SDK Android e um emulador ou dispositivo conectado.
+O primeiro build pode levar alguns minutos. O Expo compila o app Android, instala a versão de desenvolvimento no emulador e inicia o servidor Metro.
+
+### Execuções seguintes
+
+Com o emulador iniciado e o app já instalado, rode:
+
+```powershell
+npm start
+```
+
+No menu do Expo, pressione `a` para abrir o app no emulador Android. Também é possível usar `npm run android`, que compila ou atualiza o app instalado.
+
+### Usar um celular Android
+
+Ative as **Opções do desenvolvedor** e a **Depuração USB** no celular, conecte-o ao computador e aceite a autorização exibida no aparelho. Com o dispositivo conectado, execute `npm run android`.
+
+### Se o dispositivo não for detectado
+
+Confira no terminal se o ADB reconhece o emulador ou celular:
+
+```powershell
+adb devices
+```
+
+O dispositivo deve aparecer com o estado `device`. Se não aparecer, inicie o emulador pelo Device Manager ou confira o cabo e a autorização de depuração USB no celular.
+
+### Executar no navegador
+
+Para uma demonstração alternativa sem emulador, rode:
+
+```powershell
+npm run web
+```
+
+O navegador não substitui a validação mobile Android; use o emulador ou um dispositivo para apresentar o app como aplicativo mobile.
 
 ## Estrutura
 
@@ -98,3 +139,7 @@ Capturas do app em viewport mobile (Expo Web), com dados carregados da TheMealDB
 ## Decisões de arquitetura
 
 Consulte [ADR.md](./ADR.md).
+
+## Apresentação técnica
+
+Os slides estão disponíveis em [HTML](./apresentacao.html) e [PDF](./apresentacao.pdf). O roteiro dividido entre os quatro integrantes está em [ROTEIRO-APRESENTACAO.md](./ROTEIRO-APRESENTACAO.md).

@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f3e9">
+  <title>Projeto Final 1 — TheMealDB</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f8f3e9;
+      --ink: #26372e;
+      --muted: #718078;
+      --green: #357453;
+      --pale: #e4eee5;
+      --orange: #e98b55;
+      --white: #fffefa;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #e5e9e3;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    .deck {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px 28px 92px;
+    }
+
+    .slide {
+      position: relative;
+      display: none;
+      width: min(1120px, 100%);
+      min-height: min(650px, calc(100vh - 130px));
+      padding: clamp(32px, 6vw, 76px);
+      overflow: hidden;
+      border: 1px solid rgba(38, 55, 46, .08);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(233, 139, 85, .12), transparent 32%),
+        var(--paper);
+      box-shadow: 0 24px 70px rgba(38, 55, 46, .12);
+    }
+
+    .slide.active { display: flex; flex-direction: column; }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--green);
+      font-size: .82rem;
+      font-weight: 850;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 800px; margin-bottom: 20px; font-size: clamp(2.8rem, 7vw, 5.7rem); line-height: .98; letter-spacing: -.065em; }
+    h2 { max-width: 850px; margin-bottom: 24px; font-size: clamp(2rem, 4.5vw, 3.6rem); line-height: 1.03; letter-spacing: -.045em; }
+    h3 { margin-bottom: 8px; font-size: 1.08rem; }
+    p { color: var(--muted); font-size: clamp(1rem, 1.8vw, 1.28rem); line-height: 1.55; }
+    .lead { max-width: 740px; font-size: clamp(1.2rem, 2.2vw, 1.55rem); }
+    .accent { color: var(--green); }
+    .cover { justify-content: center; }
+    .cover .group { margin-top: 24px; color: var(--ink); font-weight: 750; }
+    .members { max-width: 780px; margin: 18px 0 0; color: var(--muted); line-height: 1.8; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 10px 15px;
+      border-radius: 999px;
+      background: var(--pale);
+      color: var(--green);
+      font-size: .9rem;
+      font-weight: 800;
+    }
+
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card {
+      padding: 20px;
+      border: 1px solid rgba(38, 55, 46, .08);
+      border-radius: 18px;
+      background: rgba(255, 254, 250, .88);
+    }
+    .card p { margin-bottom: 0; font-size: 1rem; }
+    .number { display: block; margin-bottom: 12px; color: var(--orange); font-size: 1.7rem; font-weight: 900; }
+    .split { display: grid; grid-template-columns: 1fr .85fr; align-items: center; gap: clamp(24px, 5vw, 68px); }
+    .split.reverse { grid-template-columns: .9fr 1fr; }
+    .shot {
+      display: block;
+      width: 100%;
+      max-height: 455px;
+      object-fit: contain;
+      border: 1px solid rgba(38, 55, 46, .1);
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 14px 36px rgba(38, 55, 46, .12);
+    }
+
+    ul { display: grid; gap: 13px; margin: 0; padding: 0; list-style: none; }
+    li { position: relative; padding-left: 29px; color: var(--ink); font-size: clamp(1rem, 1.8vw, 1.2rem); line-height: 1.45; }
+    li::before { position: absolute; left: 0; color: var(--green); content: "✓"; font-weight: 900; }
+    .code {
+      padding: 20px 24px;
+      border-radius: 18px;
+      background: #26372e;
+      color: #e8f1e8;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: clamp(.85rem, 1.6vw, 1rem);
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+    .code span { color: #a7d6af; }
+    .quote {
+      margin: auto 0;
+      padding: 24px 28px;
+      border-left: 5px solid var(--orange);
+      border-radius: 0 16px 16px 0;
+      background: rgba(255, 254, 250, .8);
+      color: var(--ink);
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      font-weight: 700;
+      line-height: 1.4;
+    }
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 24px;
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 700;
+    }
+    .controls {
+      position: fixed;
+      z-index: 3;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: rgba(248, 243, 233, .94);
+      backdrop-filter: blur(12px);
+    }
+    button {
+      min-width: 104px;
+      padding: 11px 16px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--green);
+      color: white;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    button:disabled { background: #a9b5aa; cursor: not-allowed; }
+    #counter { min-width: 76px; color: var(--ink); font-size: .95rem; font-weight: 800; text-align: center; }
+    .hint { position: fixed; right: 18px; bottom: 19px; color: var(--muted); font-size: .76rem; }
+
+    @media (max-width: 760px) {
+      .deck { padding: 14px 14px 82px; }
+      .slide { min-height: calc(100vh - 108px); padding: 28px 24px; border-radius: 20px; }
+      .split, .split.reverse { grid-template-columns: 1fr; }
+      .shot { max-height: 280px; }
+      .grid.three { grid-template-columns: 1fr; gap: 10px; }
+      .card { padding: 14px; }
+      .hint { display: none; }
+      .controls { gap: 10px; }
+      button { min-width: 82px; padding: 10px 12px; }
+    }
+
+    @media print {
+      @page { size: landscape; margin: 0; }
+      body { background: white; }
+      .deck { display: block; padding: 0; }
+      .slide, .slide.active {
+        display: flex !important;
+        width: 100vw;
+        height: 100vh;
+        min-height: 0;
+        padding: 48px 64px;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        break-after: page;
+        page-break-after: always;
+      }
+      .controls, .hint { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-label="Apresentação do projeto">
+    <section class="slide active cover" aria-label="Slide 1 de 10">
+      <p class="eyebrow">Projeto final · Aplicações móveis</p>
+      <h1>Receitas na palma da <span class="accent">mão</span></h1>
+      <p class="lead">Um app mobile para descobrir, explorar e guardar receitas da TheMealDB.</p>
+      <p class="group">Projeto Final 1 TheMealDB · React Native + Expo</p>
+      <p class="members">João Vítor Vieira Martins · Júlio César Fernandes · Jhonathan Carvo · William Tavares de Moura</p>
+      <div class="slide-footer"><span>Apresentação técnica</span><span>16 min + perguntas</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 2 de 10">
+      <p class="eyebrow">01 · Problema e proposta</p>
+      <h2>Encontrar uma receita deve ser <span class="accent">simples</span></h2>
+      <p class="lead">Criamos uma experiência mobile que transforma uma API pública em uma coleção prática de receitas para explorar e revisitar.</p>
+      <div class="grid three">
+        <article class="card"><span class="number">01</span><h3>Descobrir</h3><p>Receitas reais carregadas da TheMealDB.</p></article>
+        <article class="card"><span class="number">02</span><h3>Explorar</h3><p>Busca, categorias, ingredientes e preparo.</p></article>
+        <article class="card"><span class="number">03</span><h3>Guardar</h3><p>Favoritos preservados no dispositivo.</p></article>
+      </div>
+      <div class="slide-footer"><span>João Vítor · abertura</span><span>0:00–4:00</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 3 de 10">
+      <p class="eyebrow">02 · Lista, busca e categorias</p>
+      <div class="split">
+        <div>
+          <h2>Uma lista viva, com dados <span class="accent">reais</span></h2>
+          <ul>
+            <li>Receitas e imagens vêm da API TheMealDB.</li>
+            <li>Busca textual ajuda a encontrar pratos pelo nome.</li>
+            <li>O filtro de categoria atualiza os resultados.</li>
+            <li>Toque em um cartão para abrir o detalhe.</li>
+          </ul>
+        </div>
+        <img class="shot" src="screenshots/01-list.png" alt="Tela de lista de receitas, busca e categorias">
+      </div>
+      <div class="slide-footer"><span>João Vítor · demonstrar busca e categoria</span><span>0:00–4:00</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 4 de 10">
+      <p class="eyebrow">03 · Detalhe da receita</p>
+      <div class="split reverse">
+        <img class="shot" src="screenshots/02-detail.png" alt="Tela de detalhe de uma receita com imagem e ingredientes">
+        <div>
+          <h2>Do cartão ao <span class="accent">prato</span></h2>
+          <ul>
+            <li>Imagem e informações da receita em destaque.</li>
+            <li>Ingredientes e medidas organizados para consulta.</li>
+            <li>Modo de preparo apresentado em uma seção própria.</li>
+            <li>Favorito pode ser marcado diretamente no detalhe.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Júlio César · navegar e mostrar detalhe</span><span>4:00–8:00</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 5 de 10">
+      <p class="eyebrow">04 · Favoritos</p>
+      <div class="split">
+        <div>
+          <h2>O que gostou fica <span class="accent">guardado</span></h2>
+          <p>Favoritos ficam salvos localmente e continuam disponíveis depois de fechar e reabrir o aplicativo.</p>
+          <div class="code"><span>AsyncStorage</span><br>IDs das receitas → armazenamento local<br>abrir app → recuperar favoritos</div>
+        </div>
+        <img class="shot" src="screenshots/03-favorites.png" alt="Tela da coleção de receitas favoritas">
+      </div>
+      <div class="slide-footer"><span>Júlio César · alternar favorito e abrir coleção</span><span>4:00–8:00</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 6 de 10">
+      <p class="eyebrow">05 · Arquitetura</p>
+      <h2>Responsabilidades separadas, fluxo <span class="accent">claro</span></h2>
+      <div class="code">
+        <span>ListScreen / DetailScreen / FavoritesScreen</span><br>
+        &nbsp;&nbsp;↓ apresenta dados e coordena a interação<br>
+        <span>theMealDbApi</span> → busca e mapeia respostas HTTP<br>
+        <span>favoritesStore</span> → persiste IDs via AsyncStorage<br>
+        <span>types + utils + theme</span> → modelos, filtros e identidade visual
+      </div>
+      <p class="lead">React Native com Expo · TypeScript · estado local com hooks do React.</p>
+      <div class="slide-footer"><span>Jhonathan · explicar o fluxo lista → API → tela</span><span>8:00–12:00</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 7 de 10">
+      <p class="eyebrow">06 · Estados e testes</p>
+      <h2>Também cuidamos do que acontece fora do <span class="accent">caminho feliz</span></h2>
+      <div class="grid">
+        <article class="card"><h3>Estados da interface</h3><p>Carregando, lista vazia e erro de rede têm tratamento próprio.</p></article>
+        <article class="card"><h3>Testes automatizados</h3><p>6 testes para filtros, mapeamento da API, erros e persistência de favoritos.</p></article>
+        <article class="card"><h3>Experiência coerente</h3><p>Lista, detalhes e favoritos compartilham cores, cartões e navegação.</p></article>
+        <article class="card"><h3>Sem conta obrigatória</h3><p>A API é pública; os favoritos são locais ao dispositivo.</p></article>
+      </div>
+      <div class="slide-footer"><span>Jhonathan · citar testes e mostrar estados no app</span><span>8:00–12:00</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 8 de 10">
+      <p class="eyebrow">07 · Validação técnica</p>
+      <h2>Pronto para clonar, compilar e <span class="accent">avaliar</span></h2>
+      <div class="grid">
+        <article class="card"><span class="number">6/6</span><h3>Testes</h3><p>Todos os testes automatizados passaram.</p></article>
+        <article class="card"><span class="number">OK</span><h3>TypeScript + Expo</h3><p>Verificação de tipos e compatibilidade de dependências aprovadas.</p></article>
+        <article class="card"><span class="number">0</span><h3>Vulnerabilidades</h3><p>Resultado do npm audit após correções compatíveis.</p></article>
+        <article class="card"><span class="number">APK</span><h3>Android</h3><p>Build debug arm64-v8a compilado com sucesso.</p></article>
+      </div>
+      <div class="slide-footer"><span>William · destacar build reproduzível</span><span>12:00–16:00</span></div>
+    </section>
+
+    <section class="slide" aria-label="Slide 9 de 10">
+      <p class="eyebrow">08 · Decisões e próximos passos</p>
+      <h2>Escolhas documentadas no <span class="accent">ADR</span></h2>
+      <ul>
+        <li>Expo e React Native aproveitam a stack definida para o projeto.</li>
+        <li>AsyncStorage atende à persistência simples dos IDs favoritos.</li>
+        <li>Hooks do React mantêm o estado sem adicionar uma biblioteca global.</li>
+        <li>O README explica como instalar, executar e consultar as screenshots.</li>
+      </ul>
+      <p class="quote">O resultado é um app mobile funcional, testado e documentado, usando dados reais e gratuitos.</p>
+      <div class="slide-footer"><span>William · conclusão técnica</span><span>12:00–16:00</span></div>
+    </section>
+
+    <section class="slide cover" aria-label="Slide 10 de 10">
+      <p class="eyebrow">09 · Encerramento</p>
+      <h2>Vamos <span class="accent">demonstrar</span>?</h2>
+      <div class="grid">
+        <article class="card"><h3>Fluxo ao vivo</h3><p>Buscar → filtrar → abrir → favoritar → conferir persistência.</p></article>
+        <article class="card"><h3>Perguntas</h3><p>Reservamos cerca de 2 minutos ao final.</p></article>
+      </div>
+      <p class="members">Repositório: github.com/25823900/projeto-final-themealdb-react-native</p>
+      <div class="slide-footer"><span>Todos · perguntas e respostas</span><span>16:00–18:00</span></div>
+    </section>
+  </main>
+
+  <nav class="controls" aria-label="Navegação dos slides">
+    <button id="previous" type="button" aria-label="Slide anterior">← Anterior</button>
+    <span id="counter" aria-live="polite">1 / 10</span>
+    <button id="next" type="button" aria-label="Próximo slide">Próximo →</button>
+  </nav>
+  <div class="hint" aria-hidden="true">Use ← → ou espaço para navegar</div>
+
+  <script>
+    const slides = [...document.querySelectorAll(".slide")];
+    const counter = document.querySelector("#counter");
+    const previous = document.querySelector("#previous");
+    const next = document.querySelector("#next");
+    let current = 0;
+
+    function showSlide(index) {
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide, position) => {
+        slide.classList.toggle("active", position === current);
+        slide.setAttribute("aria-hidden", String(position !== current));
+      });
+      counter.textContent = `${current + 1} / ${slides.length}`;
+      previous.disabled = current === 0;
+      next.disabled = current === slides.length - 1;
+    }
+
+    previous.addEventListener("click", () => showSlide(current - 1));
+    next.addEventListener("click", () => showSlide(current + 1));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === " ") {
+        event.preventDefault();
+        showSlide(current + 1);
+      } else if (event.key === "ArrowLeft") {
+        showSlide(current - 1);
+      } else if (event.key === "Home") {
+        showSlide(0);
+      } else if (event.key === "End") {
+        showSlide(slides.length - 1);
+      }
+    });
+
+    showSlide(0);
+  </script>
+</body>
+</html>
