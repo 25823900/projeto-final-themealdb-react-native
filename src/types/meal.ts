@@ -10,4 +10,6 @@ export interface MealDetail {
   category: string;
   area: string;
   thumbUrl: string;
+  instructions: string;
+  ingredients: string[];
 }

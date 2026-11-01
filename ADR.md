@@ -9,6 +9,8 @@
 
 O app será implementado em React Native com Expo. A equipe já escolheu essa stack para o projeto e ela permite compartilhar a implementação mobile em TypeScript enquanto o Expo simplifica a execução e o build durante o desenvolvimento.
 
+O projeto acompanha o Expo SDK 58 e as versões de React Native e módulos nativos recomendadas por `expo install --fix`, mantendo o conjunto alinhado para builds reproduzíveis.
+
 **Alternativas consideradas:** Flutter e KMP Compose Multiplatform. Foram descartadas para este projeto porque exigiriam trocar a stack escolhida e reimplementar o skeleton e os fluxos de navegação existentes.
 
 ### Organização: separação por responsabilidade
@@ -19,6 +21,10 @@ O app será implementado em React Native com Expo. A equipe já escolheu essa st
 - `src/types/` define os modelos compartilhados.
 
 Essa separação evita espalhar detalhes de rede e armazenamento pelas telas e deixa a lógica mais simples de testar.
+
+### Interface: identidade visual compartilhada
+
+As telas compartilham uma paleta quente e natural definida em `src/theme.ts`, cartões reutilizáveis de receita e navegação inferior consistente. A lista e os favoritos usam uma grade de cartões com imagens; a tela de detalhes organiza ingredientes e preparo em seções legíveis.
 
 ### Estado: hooks do React
 
@@ -35,6 +41,14 @@ Os IDs das receitas favoritas serão persistidos no dispositivo com AsyncStorage
 ### Dados: TheMealDB
 
 O app consumirá a API pública TheMealDB para lista, detalhes e categorias. A busca por texto será feita no conjunto de receitas já carregado; a categoria será consultada pelo endpoint oficial `filter.php?c=`.
+
+### Testes: Node.js test runner
+
+Os testes de lógica usam o test runner nativo do Node.js via `tsx`. Isso permite testar filtros, mapeamento da API e persistência sem inicializar um emulador ou adicionar um framework de testes de interface ao app.
+
+### Dependências transitivas: overrides corrigidos
+
+Os pacotes transitivos `glob` e `minimatch`, usados pelas ferramentas do Expo, são fixados em versões corrigidas por `overrides` no `package.json`. Isso mantém o Expo SDK suportado e elimina os avisos do audit sem aplicar o downgrade incompatível sugerido pelo `npm audit fix --force`.
 
 ## Consequências
 

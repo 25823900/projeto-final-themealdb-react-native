@@ -2,16 +2,22 @@
 
 Aplicativo mobile do projeto final da disciplina Arquitetura de Aplicações Móveis e Multiplataforma. O app usa a API pública TheMealDB e React Native com Expo.
 
-> **Estado atual:** este repositório contém o skeleton inicial. As cinco funcionalidades ainda têm pontos `TODO` e precisam ser implementadas e testadas antes da entrega.
+> **Estado atual:** as cinco funcionalidades principais estão implementadas, com testes automatizados, capturas de tela e build Android validados.
+
+## Integrantes
+
+- João Vítor Vieira Martins
+- Júlio César Fernandes
+- Jhonathan Carvo
 
 ## Funcionalidades exigidas
 
-- [ ] Lista de receitas carregada da API TheMealDB.
-- [ ] Navegação da lista para os detalhes da receita.
-- [ ] Busca textual na lista.
-- [ ] Filtro de receitas por categoria usando a API.
-- [ ] Favoritos persistidos localmente após fechar e reabrir o app.
-- [ ] Estados de carregamento, lista vazia e erro/sem internet.
+- [x] Lista de receitas carregada da API TheMealDB.
+- [x] Navegação da lista para os detalhes da receita.
+- [x] Busca textual na lista.
+- [x] Filtro de receitas por categoria usando a API.
+- [x] Favoritos persistidos localmente após fechar e reabrir o app.
+- [x] Estados de carregamento, lista vazia e erro/sem internet.
 
 ## Requisitos
 
@@ -54,19 +60,39 @@ flows/                   Flows de exemplo herdados do skeleton
 - Detalhe: `https://www.themealdb.com/api/json/v1/1/lookup.php?i={id}`
 - Categoria: `https://www.themealdb.com/api/json/v1/1/filter.php?c={categoria}`
 
-A API não exige uma chave privada para os endpoints utilizados. Busca textual é aplicada localmente sobre os resultados carregados.
+A API não exige uma chave privada para os endpoints utilizados. A busca textual é aplicada localmente sobre a lista atual; a seleção de categoria carrega as receitas dessa categoria pela própria API.
 
 ## Testes e validação
 
-Os flows em `flows/` são exemplos opcionais do skeleton, não substituem os testes próprios exigidos no projeto. Antes da entrega, adicionar pelo menos três testes para a lógica do app, capturar os screenshots e validar o build Android.
+Execute os testes automatizados com:
+
+```bash
+npm test
+```
+
+Eles cobrem busca, integração e mapeamento da API, tratamento de erro e persistência/toggle dos favoritos. Os flows em `flows/` são exemplos opcionais do skeleton e não substituem esses testes.
+
+O APK debug foi compilado com sucesso para `arm64-v8a` usando Expo SDK 58 e JDK 21. Em Windows, use um caminho curto para o repositório se o Ninja reportar limite de comprimento de caminho.
+
+## Auditoria de dependências
+
+`npm audit` não reporta vulnerabilidades. As dependências transitivas `glob` e `minimatch` são mantidas em versões corrigidas por overrides compatíveis com o Expo SDK 58, sem downgrade do SDK.
 
 ## Screenshots
 
-Adicionar aqui pelo menos três capturas do app concluído:
+Capturas do app em viewport mobile (Expo Web), com dados carregados da TheMealDB:
 
-1. Lista de receitas.
-2. Detalhe de uma receita.
-3. Busca/filtro ou tela de favoritos.
+### Lista de receitas
+
+![Lista de receitas](screenshots/01-list.png)
+
+### Detalhe da receita
+
+![Detalhe da receita](screenshots/02-detail.png)
+
+### Favoritos
+
+![Favoritos persistidos](screenshots/03-favorites.png)
 
 ## Decisões de arquitetura
 

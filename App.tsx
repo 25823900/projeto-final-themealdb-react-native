@@ -19,12 +19,12 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="List">
-          <Stack.Screen name="List" component={ListScreen} options={{ title: 'TheMealDB' }} />
+          <Stack.Screen name="List" component={ListScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Detail" component={DetailScreen} options={{ headerShown: false }} />
           <Stack.Screen
             name="Favorites"
             component={FavoritesScreen}
-            options={{ title: 'Favoritos' }}
+            options={{ headerShown: false }}
           />
         </Stack.Navigator>
       </NavigationContainer>
