@@ -112,7 +112,7 @@ Execute os testes automatizados com:
 npm test
 ```
 
-Eles cobrem busca, integração e mapeamento da API, tratamento de erro e persistência/toggle dos favoritos. Os flows em `flows/` são exemplos opcionais do skeleton e não substituem esses testes.
+Os 7 testes cobrem busca, integração e mapeamento da API, tratamento de erro/sem internet e persistência/toggle dos favoritos. Também foram validados `npx tsc --noEmit` e `npm audit` (0 vulnerabilidades); `npx expo install --check` sugere atualizações de patch para `expo` e `react-native-safe-area-context`. Os flows em `flows/` são exemplos opcionais do skeleton e não substituem esses testes.
 
 O APK debug foi compilado com sucesso para `arm64-v8a` usando Expo SDK 58 e JDK 21. Em Windows, use um caminho curto para o repositório se o Ninja reportar limite de comprimento de caminho.
 

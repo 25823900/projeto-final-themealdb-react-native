@@ -19,6 +19,8 @@ O projeto acompanha o Expo SDK 58 e as versões de React Native e módulos nativ
 - `src/screens/` contém as telas e coordena o estado da interface.
 - `src/storage/` encapsula a persistência local dos favoritos.
 - `src/types/` define os modelos compartilhados.
+- `src/components/` reúne componentes reutilizáveis, como o cartão de receita (`MealCard`).
+- `src/utils/` contém a lógica pura de busca/filtro (`mealFilters`).
 
 Essa separação evita espalhar detalhes de rede e armazenamento pelas telas e deixa a lógica mais simples de testar.
 
@@ -44,7 +46,11 @@ O app consumirá a API pública TheMealDB para lista, detalhes e categorias. A b
 
 ### Testes: Node.js test runner
 
-Os testes de lógica usam o test runner nativo do Node.js via `tsx`. Isso permite testar filtros, mapeamento da API e persistência sem inicializar um emulador ou adicionar um framework de testes de interface ao app.
+Os testes de lógica usam o test runner nativo do Node.js via `tsx` (`npm test`). Os 7 testes atuais cobrem filtro/busca, mapeamento de lista, categoria e detalhe, persistência/toggle de favoritos, erros da API e mensagem amigável sem internet, sem emulador ou framework de testes de interface. Testes de componentes/telas ficam como evolução futura.
+
+### Validações
+
+Última execução: `npm test` (7/7 aprovados), `npx tsc --noEmit` sem erros e `npm audit` com 0 vulnerabilidades. `npx expo install --check` aponta duas atualizações de patch recomendadas (`expo` 58.0.23 e `react-native-safe-area-context` ~5.11.1), ainda não aplicadas; o build debug Android arm64-v8a foi validado anteriormente com Expo SDK 58 e JDK 21.
 
 ### Dependências transitivas: overrides corrigidos
 
@@ -55,4 +61,4 @@ Os pacotes transitivos `glob` e `minimatch`, usados pelas ferramentas do Expo, s
 - A disponibilidade da lista e dos detalhes depende de conexão com a API; a UI deve apresentar estados de carregamento e mensagens de erro, sem tela branca.
 - Favoritos persistem no aparelho, mas a tela de favoritos precisa obter novamente os dados das receitas pela API.
 - A busca textual é local e limitada aos dados carregados.
-- Os testes devem cobrir a lógica de filtro/busca e a persistência de favoritos, além de validar os estados principais das telas.
+- Os testes cobrem a lógica de filtro/busca, a API e a persistência de favoritos; os estados das telas são validados manualmente e pelos flows em `flows/`.

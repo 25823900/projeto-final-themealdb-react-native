@@ -50,14 +50,14 @@ Se possível, favoritar uma receita, recarregar ou reabrir o app e confirmar que
 Explicar o fluxo: as telas coordenam a interface, `theMealDbApi` centraliza chamadas e mapeamento da API, `favoritesStore` persiste IDs e tipos/utilitários reúnem modelos, filtros e tema. O estado usa hooks do React.
 
 **Slide 7 — qualidade (cerca de 2 min)**
-Apontar os estados de carregamento, vazio e erro. Resumir a cobertura dos seis testes: busca/filtro, respostas de lista e categoria, detalhe/ingredientes, persistência e toggle de favoritos e falhas da API.
+Apontar os estados de carregamento, vazio e erro. Resumir a cobertura dos sete testes: busca/filtro, respostas de lista e categoria, detalhe/ingredientes, persistência e toggle de favoritos, falhas da API e mensagem sem internet.
 
 **Transição:** "Para fechar, o William mostra a validação do build e as decisões que registramos no ADR."
 
 ### William Tavares de Moura — validação e conclusão (4 min)
 
 **Slide 8 — validação (cerca de 2 min)**
-Informar que os seis testes passaram, TypeScript e verificação de compatibilidade Expo passaram, `npm audit` reportou zero vulnerabilidades e o APK debug para Android arm64-v8a foi compilado.
+Informar que os sete testes e o TypeScript passaram (a verificação do Expo sugere duas atualizações de patch), `npm audit` reportou zero vulnerabilidades e o APK debug para Android arm64-v8a foi compilado.
 
 **Slide 9 — decisões (cerca de 1 min)**
 Resumir as decisões documentadas no ADR: Expo/React Native, AsyncStorage para favoritos, hooks em vez de uma biblioteca global de estado e API pública TheMealDB.
