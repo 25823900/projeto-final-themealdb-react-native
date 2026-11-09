@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict';
 import { afterEach, test } from 'node:test';
-import { fetchByCategory, fetchDetail, fetchList } from '../src/api/theMealDbApi';
+import {
+  NETWORK_ERROR_MESSAGE,
+  fetchByCategory,
+  fetchDetail,
+  fetchList,
+} from '../src/api/theMealDbApi';
 import { createFavoritesStore } from '../src/storage/favoritesStoreCore';
 import { filterMeals } from '../src/utils/mealFilters';
 
@@ -102,4 +107,11 @@ test('favorites persist across store instances and toggle on and off', async () 
 test('API failures reject with a readable error', async () => {
   globalThis.fetch = async () => mockResponse({}, false);
   await assert.rejects(fetchList(), /Falha ao carregar lista de receitas/);
+});
+
+test('network failures reject with a friendly offline message', async () => {
+  globalThis.fetch = async () => {
+    throw new TypeError('Network request failed');
+  };
+  await assert.rejects(fetchList(), { message: NETWORK_ERROR_MESSAGE });
 });

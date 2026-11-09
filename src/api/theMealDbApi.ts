@@ -1,6 +1,8 @@
 import { MealDetail, MealSummary } from '../types/meal';
 
 const BASE_URL = 'https://www.themealdb.com/api/json/v1/1';
+export const NETWORK_ERROR_MESSAGE =
+  'Sem conexão com a internet. Verifique sua rede e tente novamente.';
 
 interface MealApiSummary {
   idMeal: string;
@@ -29,7 +31,12 @@ function toSummary(meal: MealApiSummary): MealSummary {
 }
 
 async function getMeals<T>(url: string, errorMessage: string): Promise<T[]> {
-  const res = await fetch(url);
+  let res: Response;
+    try {
+      res = await fetch(url);
+    } catch {
+      throw new Error(NETWORK_ERROR_MESSAGE);
+    }
   if (!res.ok) throw new Error(errorMessage);
 
   const body = (await res.json()) as MealApiResponse<T>;

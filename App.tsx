@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ListScreen from './src/screens/ListScreen';
 import DetailScreen from './src/screens/DetailScreen';
 import FavoritesScreen from './src/screens/FavoritesScreen';
+import { StatusBar } from 'expo-status-bar';
 
 export type RootStackParamList = {
   List: undefined;
@@ -17,6 +18,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function App() {
   return (
     <SafeAreaProvider>
+    <StatusBar style="dark" />
       <NavigationContainer>
         <Stack.Navigator initialRouteName="List">
           <Stack.Screen name="List" component={ListScreen} options={{ headerShown: false }} />
