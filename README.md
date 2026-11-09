@@ -136,6 +136,12 @@ Capturas do app em viewport mobile (Expo Web), com dados carregados da TheMealDB
 
 ![Favoritos persistidos](screenshots/03-favorites.png)
 
+### Persistência dos favoritos
+
+Ao favoritar uma receita, os IDs são gravados pelo AsyncStorage na chave `favorite_meal_ids`. Na versão web ele usa o `localStorage` do navegador, como mostra o DevTools; no Android, usa o armazenamento nativo do aparelho.
+
+![Favorito gravado no armazenamento local (chave favorite_meal_ids)](screenshots/04-favorites_localstorage.png)
+
 ## Decisões de arquitetura
 
 Consulte [ADR.md](./ADR.md).
