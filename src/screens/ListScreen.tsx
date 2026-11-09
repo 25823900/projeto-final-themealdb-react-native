@@ -8,9 +8,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { fetchByCategory, fetchList } from '../api/theMealDbApi';
+import { loadFavorites, toggleFavorite } from '../storage/favoritesStore';
 import { MealSummary } from '../types/meal';
 import { filterMeals } from '../utils/mealFilters';
 import type { RootStackParamList } from '../../App';
@@ -38,6 +40,33 @@ export default function ListScreen({ navigation }: Props) {
   const [categoryError, setCategoryError] = useState<string | null>(null);
   const [categoryRequest, setCategoryRequest] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [favoriteError, setFavoriteError] = useState<string | null>(null);
+  const [savingFavorite, setSavingFavorite] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      let active = true;
+      loadFavorites()
+        .then((ids) => {
+          if (active) {
+            setFavorites(ids);
+            setFavoriteError(null);
+          }
+        })
+        .catch((loadError: unknown) => {
+          if (active) {
+            setFavoriteError(
+              loadError instanceof Error ? loadError.message : 'Erro ao carregar favoritos.',
+            );
+          }
+        });
+
+      return () => {
+        active = false;
+      };
+    }, []),
+  );
 
   const loadList = useCallback(async (showLoading = true) => {
     if (showLoading) setLoading(true);
@@ -60,6 +89,20 @@ export default function ListScreen({ navigation }: Props) {
     setSelectedCategory(category);
     setCategoryError(null);
     setCategoryMeals(null);
+  };
+
+  const onToggleFavorite = async (id: string) => {
+    setSavingFavorite(true);
+    setFavoriteError(null);
+    try {
+      setFavorites(await toggleFavorite(id));
+    } catch (saveError) {
+      setFavoriteError(
+        saveError instanceof Error ? saveError.message : 'Erro ao salvar favorito.',
+      );
+    } finally {
+      setSavingFavorite(false);
+    }
   };
 
   useEffect(() => {
@@ -339,6 +382,14 @@ export default function ListScreen({ navigation }: Props) {
                 </TouchableOpacity>
               </View>
             )}
+            {favoriteError && (
+              <Text
+                accessibilityRole="alert"
+                style={{ color: theme.colors.danger, fontSize: 12, marginHorizontal: 6, marginBottom: 10 }}
+              >
+                {favoriteError}
+              </Text>
+            )}
           </View>
         }
         ListEmptyComponent={
@@ -368,6 +419,9 @@ export default function ListScreen({ navigation }: Props) {
             meal={item}
             testID={`item-card-${item.id}`}
             onPress={() => navigation.navigate('Detail', { mealId: item.id })}
+            isFavorite={favorites.has(item.id)}
+            onToggleFavorite={() => void onToggleFavorite(item.id)}
+            favoriteDisabled={savingFavorite}
           />
         )}
       />

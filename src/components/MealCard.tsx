@@ -6,23 +6,23 @@ import { theme } from '../theme';
 export default function MealCard({
   meal,
   onPress,
+  onToggleFavorite,
+  isFavorite = false,
+  favoriteDisabled = false,
   testID,
 }: {
   meal: MealSummary;
   onPress: () => void;
+  onToggleFavorite?: () => void;
+  isFavorite?: boolean;
+  favoriteDisabled?: boolean;
   testID: string;
 }) {
   return (
-    <TouchableOpacity
-      testID={testID}
-      accessibilityRole="button"
-      accessibilityLabel={`Ver receita ${meal.name}`}
-      onPress={onPress}
-      activeOpacity={0.88}
+    <View
       style={{
         flex: 1,
         margin: 6,
-        padding: 8,
         borderRadius: theme.radius.medium,
         backgroundColor: theme.colors.surface,
         shadowColor: '#28352D',
@@ -32,46 +32,90 @@ export default function MealCard({
         elevation: 2,
       }}
     >
-      {meal.thumbUrl ? (
-        <Image
-          source={{ uri: meal.thumbUrl }}
-          resizeMode="cover"
-          style={{
-            width: '100%',
-            aspectRatio: 1.08,
-            borderRadius: theme.radius.small,
-            backgroundColor: theme.colors.surfaceMuted,
-          }}
-        />
-      ) : (
-        <View
-          style={{
-            width: '100%',
-            aspectRatio: 1.08,
-            borderRadius: theme.radius.small,
-            backgroundColor: theme.colors.surfaceMuted,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text style={{ fontSize: 32 }}>🍲</Text>
-        </View>
-      )}
-      <Text
-        numberOfLines={2}
+      <TouchableOpacity
+        testID={testID}
+        accessibilityRole="button"
+        accessibilityLabel={`Ver receita ${meal.name}`}
+        onPress={onPress}
+        activeOpacity={0.88}
         style={{
-          color: theme.colors.text,
-          fontSize: 14,
-          fontWeight: '700',
-          lineHeight: 19,
-          marginHorizontal: 4,
-          marginTop: 10,
-          marginBottom: 8,
-          minHeight: 38,
+          padding: 8,
         }}
       >
-        {meal.name}
-      </Text>
-    </TouchableOpacity>
+        {meal.thumbUrl ? (
+          <Image
+            source={{ uri: meal.thumbUrl }}
+            resizeMode="cover"
+            style={{
+              width: '100%',
+              aspectRatio: 1.08,
+              borderRadius: theme.radius.small,
+              backgroundColor: theme.colors.surfaceMuted,
+            }}
+          />
+        ) : (
+          <View
+            style={{
+              width: '100%',
+              aspectRatio: 1.08,
+              borderRadius: theme.radius.small,
+              backgroundColor: theme.colors.surfaceMuted,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text style={{ fontSize: 32 }}>🍲</Text>
+          </View>
+        )}
+        <Text
+          numberOfLines={2}
+          style={{
+            color: theme.colors.text,
+            fontSize: 14,
+            fontWeight: '700',
+            lineHeight: 19,
+            marginHorizontal: 4,
+            marginTop: 10,
+            marginBottom: 8,
+            minHeight: 38,
+          }}
+        >
+          {meal.name}
+        </Text>
+      </TouchableOpacity>
+      {onToggleFavorite && (
+        <TouchableOpacity
+          testID={`favorite-button-${meal.id}`}
+          accessibilityRole="button"
+          accessibilityLabel={
+            isFavorite
+              ? `Remover ${meal.name} dos favoritos`
+              : `Adicionar ${meal.name} aos favoritos`
+          }
+          accessibilityState={{ selected: isFavorite, disabled: favoriteDisabled }}
+          onPress={onToggleFavorite}
+          disabled={favoriteDisabled}
+          style={{
+            position: 'absolute',
+            top: 14,
+            right: 14,
+            width: 40,
+            height: 40,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: theme.radius.pill,
+            backgroundColor: 'rgba(255,255,255,0.94)',
+            shadowColor: '#000',
+            shadowOpacity: 0.12,
+            shadowRadius: 8,
+            elevation: 3,
+          }}
+        >
+          <Text style={{ color: isFavorite ? theme.colors.accent : theme.colors.textMuted, fontSize: 23 }}>
+            {isFavorite ? '♥' : '♡'}
+          </Text>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 }
