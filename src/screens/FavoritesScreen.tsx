@@ -3,17 +3,18 @@ import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { fetchDetail } from '../api/theMealDbApi';
+import { fetchFavoriteMeal } from '../services/mealsService';
 import { loadFavorites } from '../storage/favoritesStore';
 import { MealSummary } from '../types/meal';
 import type { RootStackParamList } from '../../App';
 import MealCard from '../components/MealCard';
 import BottomNav from './BottomNav';
-import { theme } from '../theme';
+import { useAppTheme } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Favorites'>;
 
 export default function FavoritesScreen({ navigation }: Props) {
+  const { theme } = useAppTheme();
   const [favorites, setFavorites] = useState<MealSummary[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [reload, setReload] = useState(0);
@@ -27,11 +28,9 @@ export default function FavoritesScreen({ navigation }: Props) {
       const load = async () => {
         try {
           const ids = await loadFavorites();
-          const meals = await Promise.all(Array.from(ids, (id) => fetchDetail(id)));
+          const meals = await Promise.all(Array.from(ids, (id) => fetchFavoriteMeal(id)));
           if (active) {
-            setFavorites(
-              meals.map(({ id, name, thumbUrl }) => ({ id, name, thumbUrl })),
-            );
+            setFavorites(meals);
           }
         } catch (loadError) {
           if (active) {

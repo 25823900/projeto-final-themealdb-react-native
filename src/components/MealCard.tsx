@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import type { MealSummary } from '../types/meal';
-import { theme } from '../theme';
+import { useAppTheme } from '../theme';
 
 export default function MealCard({
   meal,
@@ -18,6 +18,7 @@ export default function MealCard({
   favoriteDisabled?: boolean;
   testID: string;
 }) {
+  const { theme } = useAppTheme();
   return (
     <View
       style={{
@@ -104,7 +105,7 @@ export default function MealCard({
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: theme.radius.pill,
-            backgroundColor: 'rgba(255,255,255,0.94)',
+            backgroundColor: theme.colors.surface,
             shadowColor: '#000',
             shadowOpacity: 0.12,
             shadowRadius: 8,

@@ -9,15 +9,16 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { fetchDetail } from '../api/theMealDbApi';
+import { fetchDetail } from '../services/mealsService';
 import { loadFavorites, toggleFavorite } from '../storage/favoritesStore';
 import { MealDetail } from '../types/meal';
 import type { RootStackParamList } from '../../App';
-import { theme } from '../theme';
+import { useAppTheme } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Detail'>;
 
 export default function DetailScreen({ route, navigation }: Props) {
+  const { theme } = useAppTheme();
   const { mealId } = route.params;
   const [detail, setDetail] = useState<MealDetail | null>(null);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -125,7 +126,7 @@ export default function DetailScreen({ route, navigation }: Props) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: theme.radius.pill,
-                backgroundColor: 'rgba(255,255,255,0.94)',
+                backgroundColor: theme.colors.surface,
                 shadowColor: '#000',
                 shadowOpacity: 0.12,
                 shadowRadius: 8,

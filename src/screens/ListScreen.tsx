@@ -11,14 +11,14 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { fetchByCategory, fetchList } from '../api/theMealDbApi';
+import { fetchByCategory, fetchList } from '../services/mealsService';
 import { loadFavorites, toggleFavorite } from '../storage/favoritesStore';
 import { MealSummary } from '../types/meal';
 import { filterMeals } from '../utils/mealFilters';
 import type { RootStackParamList } from '../../App';
 import MealCard from '../components/MealCard';
 import BottomNav from './BottomNav';
-import { theme } from '../theme';
+import { useAppTheme } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'List'>;
 
@@ -30,6 +30,7 @@ const CATEGORIES = [
 ];
 
 export default function ListScreen({ navigation }: Props) {
+  const { theme, mode, toggleTheme, error: themeError } = useAppTheme();
   const [all, setAll] = useState<MealSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -217,24 +218,53 @@ export default function ListScreen({ navigation }: Props) {
             <View style={{ paddingHorizontal: 6, paddingTop: 18 }}>
               <View
                 style={{
-                  alignSelf: 'flex-start',
-                  paddingHorizontal: 12,
-                  paddingVertical: 6,
-                  borderRadius: theme.radius.pill,
-                  backgroundColor: theme.colors.primarySoft,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
                 }}
               >
-                <Text
+                <View
                   style={{
-                    color: theme.colors.primaryDark,
-                    fontSize: 11,
-                    fontWeight: '800',
-                    letterSpacing: 1.1,
+                    paddingHorizontal: 12,
+                    paddingVertical: 6,
+                    borderRadius: theme.radius.pill,
+                    backgroundColor: theme.colors.primarySoft,
                   }}
                 >
-                  RECEITAS PARA HOJE
-                </Text>
+                  <Text
+                    style={{
+                      color: theme.colors.primaryDark,
+                      fontSize: 11,
+                      fontWeight: '800',
+                      letterSpacing: 1.1,
+                    }}
+                  >
+                    RECEITAS PARA HOJE
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  accessibilityRole="button"
+                  accessibilityLabel={mode === 'light' ? 'Ativar tema escuro' : 'Ativar tema claro'}
+                  onPress={() => void toggleTheme()}
+                  style={{
+                    paddingHorizontal: 12,
+                    paddingVertical: 8,
+                    borderRadius: theme.radius.pill,
+                    backgroundColor: theme.colors.surface,
+                    borderWidth: 1,
+                    borderColor: theme.colors.border,
+                  }}
+                >
+                  <Text style={{ color: theme.colors.text, fontSize: 12, fontWeight: '700' }}>
+                    {mode === 'light' ? '🌙 Escuro' : '☀️ Claro'}
+                  </Text>
+                </TouchableOpacity>
               </View>
+              {themeError && (
+                <Text accessibilityRole="alert" style={{ color: theme.colors.danger, fontSize: 12, marginTop: 8 }}>
+                  {themeError}
+                </Text>
+              )}
               <Text
                 style={{
                   color: theme.colors.text,
@@ -441,6 +471,7 @@ function Chip({
   selected: boolean;
   onPress: () => void;
 }) {
+  const { theme } = useAppTheme();
   return (
     <TouchableOpacity
       testID={testID}

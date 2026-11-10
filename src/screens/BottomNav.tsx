@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
-import { theme } from '../theme';
+import { useAppTheme } from '../theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Nav = Pick<
@@ -18,6 +18,7 @@ export default function BottomNav({
   active: 'List' | 'Favorites';
 }) {
   const insets = useSafeAreaInsets();
+  const { theme } = useAppTheme();
 
   return (
     <View

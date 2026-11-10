@@ -19,6 +19,8 @@ Aplicativo mobile do projeto final da disciplina Arquitetura de Aplicações Mó
 - [x] Filtro de receitas por categoria usando a API.
 - [x] Favoritos persistidos localmente após fechar e reabrir o app.
 - [x] Estados de carregamento, lista vazia e erro/sem internet.
+- [x] Tema claro/escuro com preferência salva localmente.
+- [x] Cache local de listas, categorias e detalhes para consulta sem conexão após o primeiro carregamento.
 
 ## Requisitos
 
@@ -89,9 +91,10 @@ O navegador não substitui a validação mobile Android; use o emulador ou um di
 
 ```text
 App.tsx                  Navegação principal
-src/api/                 Integração HTTP com TheMealDB
+src/api/                 Cliente HTTP da TheMealDB
+src/services/            Serviço de receitas e fallback pelo cache offline
 src/screens/             Lista, detalhes, favoritos e navegação inferior
-src/storage/             Persistência local de favoritos
+src/storage/             Persistência local de favoritos, tema e cache
 src/types/               Modelos de dados
 flows/                   Flows de exemplo herdados do skeleton
 ```
@@ -104,6 +107,10 @@ flows/                   Flows de exemplo herdados do skeleton
 
 A API não exige uma chave privada para os endpoints utilizados. A busca textual é aplicada localmente sobre a lista atual; a seleção de categoria carrega as receitas dessa categoria pela própria API.
 
+As telas acessam receitas por `src/services/`, não fazem chamadas HTTP diretamente. O serviço atualiza o cache persistente com respostas recentes e, quando a API falha, usa a última cópia disponível da lista, categoria ou detalhe. O cache só pode oferecer dados que já tenham sido carregados pelo menos uma vez com conexão.
+
+O botão de tema no topo da lista alterna entre os modos claro e escuro; a seleção fica salva no armazenamento local e é aplicada em todas as telas.
+
 ## Testes e validação
 
 Execute os testes automatizados com:
@@ -112,7 +119,7 @@ Execute os testes automatizados com:
 npm test
 ```
 
-Os 7 testes cobrem busca, integração e mapeamento da API, tratamento de erro/sem internet e persistência/toggle dos favoritos. Também foram validados `npx tsc --noEmit` e `npm audit` (0 vulnerabilidades); `npx expo install --check` sugere atualizações de patch para `expo` e `react-native-safe-area-context`. Os flows em `flows/` são exemplos opcionais do skeleton e não substituem esses testes.
+Os testes cobrem busca, integração e mapeamento da API, tratamento de erro/sem internet, cache de receitas para uso offline e persistência de favoritos e tema. Também foram validados `npx tsc --noEmit` e `npm audit` (0 vulnerabilidades); `npx expo install --check` sugere atualizações de patch para `expo` e `react-native-safe-area-context`. Os flows em `flows/` são exemplos opcionais do skeleton e não substituem esses testes.
 
 O APK debug foi compilado com sucesso para `arm64-v8a` usando Expo SDK 58 e JDK 21. Em Windows, use um caminho curto para o repositório se o Ninja reportar limite de comprimento de caminho.
 

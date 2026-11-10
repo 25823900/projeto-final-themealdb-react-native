@@ -6,6 +6,8 @@ import ListScreen from './src/screens/ListScreen';
 import DetailScreen from './src/screens/DetailScreen';
 import FavoritesScreen from './src/screens/FavoritesScreen';
 import { StatusBar } from 'expo-status-bar';
+import { DarkTheme, DefaultTheme } from '@react-navigation/native';
+import { ThemeProvider, useAppTheme } from './src/theme';
 
 export type RootStackParamList = {
   List: undefined;
@@ -18,8 +20,19 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function App() {
   return (
     <SafeAreaProvider>
-    <StatusBar style="dark" />
-      <NavigationContainer>
+      <ThemeProvider>
+        <AppNavigation />
+      </ThemeProvider>
+    </SafeAreaProvider>
+  );
+}
+
+function AppNavigation() {
+  const { mode } = useAppTheme();
+  return (
+    <>
+      <StatusBar style={mode === 'dark' ? 'light' : 'dark'} />
+      <NavigationContainer theme={mode === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack.Navigator initialRouteName="List">
           <Stack.Screen name="List" component={ListScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Detail" component={DetailScreen} options={{ headerShown: false }} />
@@ -30,6 +43,6 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </SafeAreaProvider>
+    </>
   );
 }
